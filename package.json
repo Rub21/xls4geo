@@ -1,0 +1,29 @@
+{
+  "name": "xlsx4geo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "xlsx4geo": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rub21/xlsx4geo.git"
+  },
+  "author": "Ruben Lopez M <ruben@mapbox.com> (http://rub21.github.io/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rub21/xlsx4geo/issues"
+  },
+  "homepage": "https://github.com/Rub21/xlsx4geo#readme",
+  "dependencies": {
+    "fast-levenshtein": "^2.0.6",
+    "minimist": "^1.2.0",
+    "request": "^2.69.0",
+    "underscore": "^1.8.3",
+    "xlsx": "^0.8.6"
+  }
+}

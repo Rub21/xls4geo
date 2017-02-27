@@ -37,9 +37,17 @@ module.exports = {
         if (k[0] === '!') continue;
         var row = k.match(/\d+$/)[0];
         if (xlsObjs[sheet][row]) {
-          xlsObjs[sheet][row].push(worksheet[k].v);
+          if (row === '1') {
+            xlsObjs[sheet][row].push(trim(worksheet[k].v.toString()).replace(/\s/g, '').replace(/\//g, ''));
+          } else {
+            xlsObjs[sheet][row].push(trim(worksheet[k].v.toString()));
+          }
         } else {
-          xlsObjs[sheet][row] = [worksheet[k].v];
+          if (row === '1') {
+            xlsObjs[sheet][row] = [trim(worksheet[k].v.toString()).replace(/\s/g, '').replace(/\//g, '')];
+          } else {
+            xlsObjs[sheet][row] = [trim(worksheet[k].v.toString())];
+          }
         }
       }
     });
@@ -50,9 +58,9 @@ module.exports = {
     function writeFileCSV(nameSheet, sheetValue) {
       var rows = _.values(sheetValue);
       var valueRows = rows.join('\n');
-      var nameFile = nameSheet = nameSheet.toLowerCase().replace(/\s/g, '');
+      var nameFile = nameSheet = nameSheet.toLowerCase().replace(/\s/g, '') + '-';
       for (var i = 0; i < placesType.length; i++) {
-        if (nameSheet.includes(placesType[i]) || fastl.get(nameSheet, placesType[i]) < 2) {
+        if (nameSheet.includes(placesType[i]) || fastl.get(nameSheet, placesType[i]) < 3) {
           nameFile = placesType[i];
         }
       }
@@ -67,9 +75,20 @@ module.exports = {
         if (flag < sheetLists.length) {
           writeFileCSV(sheetLists[flag], xlsObjs[sheetLists[flag]]);
         } else {
-          console.log('CSV files were created :\n' + filesNames.join('\n'));
+          console.log(filesNames.join('\n'));
         }
       });
     }
   }
 };
+
+function trim(str) {
+  str = str.replace(/^\s+/, '');
+  for (var i = str.length - 1; i >= 0; i--) {
+    if (/\S/.test(str.charAt(i))) {
+      str = str.substring(0, i + 1);
+      break;
+    }
+  }
+  return str;
+}

@@ -2,6 +2,7 @@ var fs = require('fs');
 var _ = require('underscore');
 var XLSX = require('xlsx');
 var fastl = require('fast-levenshtein');
+var path = require('path');
 var placesType = ['airports',
   'amusementparks',
   'barsclubs',
@@ -26,10 +27,16 @@ var placesType = ['airports',
 ];
 module.exports = {
   build: function(file, iata) {
+    iata = iata.toLowerCase();
+    var folder = path.basename(file, '.xlsx').replace(/\s/g, '-');
     var workbook = XLSX.readFile(file);
     var sheets = workbook.SheetNames;
     var sheetLists = workbook.SheetNames;
     var xlsObjs = {};
+    if (!fs.existsSync(folder)) {
+      fs.mkdirSync(folder);
+      fs.mkdirSync(path.join(folder, 'wild'));
+    }
     sheetLists.forEach(function(sheet) {
       var worksheet = workbook.Sheets[sheet];
       xlsObjs[sheet] = {};
@@ -40,13 +47,13 @@ module.exports = {
           if (row === '1') {
             xlsObjs[sheet][row].push(trim(worksheet[k].v.toString()).replace(/\s/g, '').replace(/\//g, ''));
           } else {
-            xlsObjs[sheet][row].push(trim(worksheet[k].v.toString()));
+            xlsObjs[sheet][row].push(quotation(trim(worksheet[k].v.toString())));
           }
         } else {
           if (row === '1') {
             xlsObjs[sheet][row] = [trim(worksheet[k].v.toString()).replace(/\s/g, '').replace(/\//g, '')];
           } else {
-            xlsObjs[sheet][row] = [trim(worksheet[k].v.toString())];
+            xlsObjs[sheet][row] = [quotation(trim(worksheet[k].v.toString()))];
           }
         }
       }
@@ -69,7 +76,7 @@ module.exports = {
       }
       var csvFile = 'aa-poi-' + iata + '-' + nameFile + '.csv';
       filesNames.push(csvFile);
-      fs.writeFile(csvFile, valueRows, function(err) {
+      fs.writeFile(path.join(folder, 'wild', csvFile), valueRows, function(err) {
         if (err) return console.log(err);
         flag++;
         if (flag < sheetLists.length) {
@@ -90,5 +97,11 @@ function trim(str) {
       break;
     }
   }
+  return str;
+}
+
+function quotation(str) {
+  if (str.indexOf(',') > -1)
+    return JSON.stringify(str);
   return str;
 }

@@ -40,6 +40,9 @@ module.exports = {
     sheetLists.forEach(function(sheet) {
       var worksheet = workbook.Sheets[sheet];
       xlsObjs[sheet] = {};
+      for (x in worksheet) {
+
+      }
       for (k in worksheet) {
         if (k[0] === '!') continue;
         var row = k.match(/\d+$/)[0];

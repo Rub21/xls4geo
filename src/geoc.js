@@ -43,8 +43,12 @@ module.exports = {
           headers: true
         })
         .on("data", function(data) {
-          if (numRows > counterflag) {
-            body += data.LocalName + ',' + data.Longitude + ',' + data.Latitude + '\n';
+          if (numRows >= counterflag) {
+            if (data.EnglishNameTranslation) {
+              body += data.EnglishNameTranslation + ',' + data.Longitude + ',' + data.Latitude + '\n';
+            } else {
+              body += data.LocalName + ',' + data.Longitude + ',' + data.Latitude + '\n';
+            }
           } else {
             return;
           }
@@ -58,13 +62,12 @@ module.exports = {
               togeoc(pathToFiles[flag]);
               //build json file
               forward.options.proximity = coords.split(',').map(Number);
-              forward.pass += counterflag;
-              reverse.pass += counterflag;
+              forward.pass += (counterflag - 1);
+              reverse.pass += (counterflag - 1);
               qlc[path.basename(pathTofile).split('.')[0] + '.forward'] = forward;
               qlc[path.basename(pathTofile).split('.')[0] + '.reverse'] = reverse;
 
             } else {
-              // console.log('check your files : ' + dirResult);
               console.log(JSON.stringify(qlc));
             }
           });

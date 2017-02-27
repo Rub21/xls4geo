@@ -1,6 +1,6 @@
 # xls4geo
 
-# Install
+### Install
 
  ```
  git clone https://github.com/Rub21/xlsx4geo.github.com

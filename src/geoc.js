@@ -80,7 +80,10 @@ module.exports = {
               counterflag = i + 1;
             }
           }
-          fs.writeFile(path.join(dirResult, path.basename(pathTofile)), body, function(err) {
+
+          var baseFileName = path.basename(pathTofile).split('-');
+          baseFileName = 'aa-poi-' + baseFileName[1] + '-' + baseFileName[2];
+          fs.writeFile(path.join(dirResult, baseFileName), body, function(err) {
             if (err) return console.log(err);
             flag++;
             if (flag < pathToFiles.length) {
@@ -89,8 +92,8 @@ module.exports = {
               forward.options.proximity = coords.split(',').map(Number);
               forward.pass += counterflag;
               reverse.pass += counterflag;
-              qlc[path.basename(pathTofile).split('.')[0] + '.forward'] = forward;
-              qlc[path.basename(pathTofile).split('.')[0] + '.reverse'] = reverse;
+              qlc[baseFileName.split('.')[0] + '.forward'] = forward;
+              qlc[baseFileName.split('.')[0] + '.reverse'] = reverse;
             } else {
               console.log(JSON.stringify(qlc));
             }

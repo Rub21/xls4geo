@@ -33,9 +33,7 @@ module.exports = {
     iata = iata.toLowerCase();
     var folder = path.basename(file, '.xlsx').replace(/\s/g, '-');
     var workbook = XLSX.readFile(file, {
-      sheetStubs: true,
-      cellStyles: true
-
+      sheetStubs: true
     });
     var sheets = workbook.SheetNames;
     var sheetLists = workbook.SheetNames;
@@ -119,7 +117,7 @@ module.exports = {
       }
       var csvFile = 'aa-poi-' + iata + '-' + nameFile + '.csv';
       filesNames.push(csvFile);
-      fs.writeFile(path.join(folder, 'wild', csvFile), valueRows, function(err) {
+      fs.writeFile(path.join(folder, 'wild', csvFile), valueRows, 'utf-8', function(err) {
         if (err) return console.log(err);
         flag++;
         if (flag < sheetLists.length) {
@@ -144,6 +142,7 @@ function trim(str) {
 }
 
 function quotation(str) {
+  str = str.replace(/\"/g, '\'');
   if (str.indexOf(',') > -1)
     return JSON.stringify(str);
   return str;

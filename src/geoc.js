@@ -8,6 +8,7 @@ module.exports = {
     var rows = [];
     var counterflag = 1;
     var stream = fs.createReadStream(file);
+
     csv.fromStream(stream, {
         headers: true
       })

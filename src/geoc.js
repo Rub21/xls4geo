@@ -21,9 +21,9 @@ module.exports = {
         for (var i = 0; i < rows.length; i++) {
           if (i < numRowsAllowed) {
             if (rows[i].EnglishNameTranslation) {
-              console.log(rows[i].EnglishNameTranslation + ',' + rows[i].Longitude + ',' + rows[i].Latitude);
+              console.log(rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].EnglishNameTranslation);
             } else {
-              console.log(rows[i].LocalName + ',' + rows[i].Longitude + ',' + rows[i].Latitude);
+              console.log(rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].LocalName);
             }
           }
         }
@@ -64,9 +64,17 @@ module.exports = {
           for (var i = 0; i < rows.length; i++) {
             if (i < numRowsAllowed) {
               if (rows[i].EnglishNameTranslation) {
-                body += rows[i].EnglishNameTranslation + ',' + rows[i].Longitude + ',' + rows[i].Latitude + '\n';
+                if ((i + 1) === numRowsAllowed || i === (rows.length - 1)) {
+                  body += rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].EnglishNameTranslation;
+                } else {
+                  body += rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].EnglishNameTranslation + '\n';
+                }
               } else {
-                body += rows[i].LocalName + ',' + rows[i].Longitude + ',' + rows[i].Latitude + '\n';
+                if ((i + 1) === numRowsAllowed || i === (rows.length - 1)) {
+                  body += rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].LocalName;
+                } else {
+                  body += rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].LocalName + '\n';
+                }
               }
               counterflag = i + 1;
             }

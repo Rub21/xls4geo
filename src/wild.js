@@ -25,8 +25,8 @@ var placesType = ['airports',
   'amusement',
   'racetracks',
   'nightlife',
-  'citywide',
-  'venues'
+  'citywide'
+  // 'venues'
 ];
 module.exports = {
   build: function(file, iata) {

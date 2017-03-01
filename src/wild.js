@@ -24,7 +24,9 @@ var placesType = ['airports',
   'libraries',
   'amusement',
   'racetracks',
-  'nightlife'
+  'nightlife',
+  'citywide',
+  'venues'
 ];
 module.exports = {
   build: function(file, iata) {
@@ -42,6 +44,7 @@ module.exports = {
       fs.mkdirSync(folder);
       fs.mkdirSync(path.join(folder, 'wild'));
     }
+    var Sheetscolums = {};
     sheetLists.forEach(function(sheet) {
       var worksheet = workbook.Sheets[sheet];
       xlsObjs[sheet] = {};
@@ -64,7 +67,7 @@ module.exports = {
         }
       }
       //Num avaliable rows
-      var numRows = 2;
+      var numRows = 3;
       for (var i = 0; i < rows.length; i++) {
         var row = _.values(rows[i]);
         numCool = _.without(rows[i], false).length;
@@ -80,13 +83,17 @@ module.exports = {
         if (colums.indexOf(colum) > -1 && row < numRows) {
           if (xlsObjs[sheet][row]) {
             if (row === '1') {
-              xlsObjs[sheet][row].push(trim(worksheet[k].v.toString()).replace(/\s/g, '').replace(/\//g, ''));
+              var nameColum = trim(worksheet[k].v.toString()).replace(/\s/g, '').replace(/\//g, '');
+              xlsObjs[sheet][row].push(nameColum);
+              Sheetscolums[sheet].push(nameColum);
             } else {
               xlsObjs[sheet][row].push(quotation(trim((worksheet[k].v || '').toString())));
             }
           } else {
             if (row === '1') {
-              xlsObjs[sheet][row] = [trim(worksheet[k].v.toString()).replace(/\s/g, '').replace(/\//g, '')];
+              var nameColum = trim(worksheet[k].v.toString()).replace(/\s/g, '').replace(/\//g, '');
+              xlsObjs[sheet][row] = [nameColum];
+              Sheetscolums[sheet] = [nameColum];
             } else {
               xlsObjs[sheet][row] = [quotation(trim((worksheet[k].v || '').toString()))];
             }
@@ -96,10 +103,10 @@ module.exports = {
     });
     var flag = 0;
     var filesNames = [];
-    writeFileCSV(sheetLists[flag], xlsObjs[sheetLists[flag]]);
+    writeFileCSV(sheetLists[flag], xlsObjs[sheetLists[flag]], Sheetscolums[sheetLists[flag]]);
 
-    function writeFileCSV(nameSheet, sheetValue) {
-      var rows = _.values(sheetValue);
+    function writeFileCSV(nameSheet, sheetValue, headers) {
+      var rows = sort(sheetValue, headers);
       var valueRows = rows.join('\n');
       var nameFile = nameSheet = nameSheet.toLowerCase().replace(/\s/g, '') + '-';
       for (var i = 0; i < placesType.length; i++) {
@@ -116,7 +123,7 @@ module.exports = {
         if (err) return console.log(err);
         flag++;
         if (flag < sheetLists.length) {
-          writeFileCSV(sheetLists[flag], xlsObjs[sheetLists[flag]]);
+          writeFileCSV(sheetLists[flag], xlsObjs[sheetLists[flag]], Sheetscolums[sheetLists[flag]]);
         } else {
           console.log(filesNames.join('\n'));
         }
@@ -140,4 +147,29 @@ function quotation(str) {
   if (str.indexOf(',') > -1)
     return JSON.stringify(str);
   return str;
+}
+
+function sort(body, headers) {
+  var rows = _.values(body);
+  var rowsObjs = [];
+  for (var i = 0; i < rows.length; i++) {
+    var row = rows[i];
+    var rowObj = {};
+    _.each(headers, function(k, i) {
+      rowObj[k] = row[i];
+    });
+    rowsObjs.push(rowObj);
+  }
+  rowsObjs.sort(function(a, b) {
+    return parseInt(a.Importance) - parseInt(b.Importance);
+  }).reverse();
+  var sortObjs = [];
+  for (var y = 0; y < rowsObjs.length; y++) {
+    var values = _.values(rowsObjs[y]);
+    if (_.compact(values).length > 0 && _.intersection(values, headers).length !== headers.length) {
+      sortObjs.push(values);
+    }
+  }
+  sortObjs.unshift(headers);
+  return sortObjs;
 }

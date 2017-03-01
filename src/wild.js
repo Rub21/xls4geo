@@ -29,9 +29,10 @@ var placesType = ['airports',
   // 'venues'
 ];
 module.exports = {
-  build: function(file, iata) {
+  build: function(file, country, iata) {
     iata = iata.toLowerCase();
-    var folder = path.basename(file, '.xlsx').replace(/\s/g, '-');
+    country = country.toLowerCase();
+    var folder = country + '-' + iata;
     var workbook = XLSX.readFile(file, {
       sheetStubs: true
     });
@@ -40,7 +41,6 @@ module.exports = {
     var xlsObjs = {};
     if (!fs.existsSync(folder)) {
       fs.mkdirSync(folder);
-      fs.mkdirSync(path.join(folder, 'wild'));
     }
     var Sheetscolums = {};
     sheetLists.forEach(function(sheet) {
@@ -115,9 +115,9 @@ module.exports = {
       if (nameSheet == nameFile) {
         nameFile = nameSheet + '-RENAME';
       }
-      var csvFile = 'aa-poi-' + iata + '-' + nameFile + '.csv';
+      var csvFile = country + '-' + iata + '-' + nameFile + '.csv';
       filesNames.push(csvFile);
-      fs.writeFile(path.join(folder, 'wild', csvFile), valueRows, 'utf-8', function(err) {
+      fs.writeFile(path.join(folder, csvFile), valueRows, 'utf-8', function(err) {
         if (err) return console.log(err);
         flag++;
         if (flag < sheetLists.length) {

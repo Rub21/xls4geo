@@ -15,7 +15,7 @@
 Convert all sheets from xlsx into CSV files.
 
 ```
-xlsx4geo wild --file Tests.xlsx --iata VIE
+xlsx4geo wild --file Tests.xlsx --country cz --iata prg
 
 ```
 
@@ -24,7 +24,7 @@ xlsx4geo wild --file Tests.xlsx --iata VIE
 Convert a CSV file into custom CSV files.
 
 ```
-xlsx4geo geoc --file Tests/wild/coffee.csv > coffee.csv
+xlsx4geo geoc --file cz-prg/cz-prg-coffee.csv > coffee.csv
 
 ```
 
@@ -33,5 +33,5 @@ xlsx4geo geoc --file Tests/wild/coffee.csv > coffee.csv
 Convert all CSV files in a folder into custom CSV files.
 
 ```
-xlsx4geo geocfull --surce Tests/wild/ --result data/ --coords="16.3725042,48.2083537" > result.json
+xlsx4geo geocfull --surce cz-prg/ --result data/ --coords="16.3725042,48.2083537" > result.json
 ```

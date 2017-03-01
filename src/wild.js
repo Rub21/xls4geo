@@ -80,7 +80,7 @@ module.exports = {
         var colum = k.replace(/[^a-zA-Z]+/g, '');
         if (colums.indexOf(colum) > -1 && row < numRows) {
           if (xlsObjs[sheet][row]) {
-            if (row === '1') {
+            if (row === '1' && worksheet[k].v) {
               var nameColum = trim(worksheet[k].v.toString()).replace(/\s/g, '').replace(/\//g, '');
               xlsObjs[sheet][row].push(nameColum);
               Sheetscolums[sheet].push(nameColum);
@@ -88,7 +88,7 @@ module.exports = {
               xlsObjs[sheet][row].push(quotation(trim((worksheet[k].v || '').toString())));
             }
           } else {
-            if (row === '1') {
+            if (row === '1' && worksheet[k].v) {
               var nameColum = trim(worksheet[k].v.toString()).replace(/\s/g, '').replace(/\//g, '');
               xlsObjs[sheet][row] = [nameColum];
               Sheetscolums[sheet] = [nameColum];

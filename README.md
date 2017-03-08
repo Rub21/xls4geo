@@ -33,5 +33,5 @@ xlsx4geo geoc --file cz-prg/cz-prg-coffee.csv > coffee.csv
 Convert all CSV files in a folder into custom CSV files.
 
 ```
-xlsx4geo geocfull --surce cz-prg/ --result data/ --coords="16.3725042,48.2083537" > result.json
+xlsx4geo geocfull --source cz-prg/ --result data/ --coords="16.3725042,48.2083537" > result.json
 ```

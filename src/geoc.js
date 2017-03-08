@@ -8,7 +8,6 @@ module.exports = {
     var rows = [];
     var counterflag = 1;
     var stream = fs.createReadStream(file);
-
     csv.fromStream(stream, {
         headers: true
       })
@@ -59,6 +58,7 @@ module.exports = {
           rows.push(data);
         })
         .on("end", function() {
+
           rows.sort(function(a, b) {
             return a.Importance - b.Importance;
           }).reverse();
@@ -95,6 +95,12 @@ module.exports = {
               qlc[baseFileName.split('.')[0] + '.forward'] = forward;
               qlc[baseFileName.split('.')[0] + '.reverse'] = reverse;
             } else {
+              //build json file
+              forward.options.proximity = coords.split(',').map(Number);
+              forward.pass += counterflag;
+              reverse.pass += counterflag;
+              qlc[baseFileName.split('.')[0] + '.forward'] = forward;
+              qlc[baseFileName.split('.')[0] + '.reverse'] = reverse;
               console.log(JSON.stringify(qlc));
             }
           });

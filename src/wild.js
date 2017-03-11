@@ -142,7 +142,7 @@ function trim(str) {
 }
 
 function quotation(str) {
-  str = str.replace(/\"/g, '\'');
+  str = str.replace(/\"/g, '\'').replace('&#10;', '');
   if (str.indexOf(',') > -1)
     return JSON.stringify(str);
   return str;

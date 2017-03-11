@@ -20,10 +20,10 @@ module.exports = {
         }).reverse();
         for (var i = 0; i < rows.length; i++) {
           if (i < numRowsAllowed) {
-            if (rows[i].EnglishNameTranslation) {
-              console.log(rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].EnglishNameTranslation);
+            if (rows[i].name_en) {
+              console.log(rows[i].longitude + ',' + rows[i].latitude + ',' + quotation(rows[i].name_en));
             } else {
-              console.log(rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].LocalName);
+              console.log(rows[i].longitude + ',' + rows[i].latitude + ',' + quotation(rows[i].name));
             }
           }
         }
@@ -35,6 +35,7 @@ module.exports = {
     var flag = 0;
     togeoc(pathToFiles[flag]);
     var qlc = {};
+    coords = coords.replace('[', '').replace(']', '');
 
     function togeoc(pathTofile) {
       var forward = {
@@ -60,21 +61,21 @@ module.exports = {
         .on("end", function() {
 
           rows.sort(function(a, b) {
-            return a.Importance - b.Importance;
+            return a.Importances - b.Importance;
           }).reverse();
           for (var i = 0; i < rows.length; i++) {
             if (i < numRowsAllowed) {
-              if (rows[i].EnglishNameTranslation) {
+              if (rows[i].name_en) {
                 if ((i + 1) === numRowsAllowed || i === (rows.length - 1)) {
-                  body += rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].EnglishNameTranslation;
+                  body += rows[i].longitude + ',' + rows[i].latitude + ',' + quotation(rows[i].name_en);
                 } else {
-                  body += rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].EnglishNameTranslation + '\n';
+                  body += rows[i].longitude + ',' + rows[i].latitude + ',' + quotation(rows[i].name_en) + '\n';
                 }
               } else {
                 if ((i + 1) === numRowsAllowed || i === (rows.length - 1)) {
-                  body += rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].LocalName;
+                  body += rows[i].longitude + ',' + rows[i].latitude + ',' + quotation(rows[i].name);
                 } else {
-                  body += rows[i].Longitude + ',' + rows[i].Latitude + ',' + rows[i].LocalName + '\n';
+                  body += rows[i].longitude + ',' + rows[i].latitude + ',' + quotation(rows[i].name) + '\n';
                 }
               }
               counterflag = i + 1;
@@ -104,7 +105,6 @@ module.exports = {
               console.log(JSON.stringify(qlc));
             }
           });
-
         });
     }
   }
@@ -116,4 +116,11 @@ function fileList(dir) {
     var isDir = fs.statSync(name).isDirectory();
     return list.concat(isDir ? fileList(name) : [name]);
   }, []);
+}
+
+function quotation(str) {
+  str = str.replace(/\"/g, '\'').replace('&#10;', '');;
+  // if (str.indexOf(',') > -1)
+  //   return '"' + str + '"';
+  return str;
 }

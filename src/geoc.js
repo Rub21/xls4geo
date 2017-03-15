@@ -119,8 +119,6 @@ function fileList(dir) {
 }
 
 function quotation(str) {
-  str = str.replace(/\"/g, '\'').replace('&#10;', '');;
-  // if (str.indexOf(',') > -1)
-  //   return '"' + str + '"';
+  str = str.replace(/\"/g, '\'').replace('&#10;', '');
   return str;
 }
